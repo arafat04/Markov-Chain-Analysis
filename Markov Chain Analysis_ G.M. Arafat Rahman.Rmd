@@ -1,16 +1,8 @@
-```{python}
-
-```
-
-```{python}
-
-```
-
 ---
 title: "Final Project - Markov Chain Analysis with R"
 author: "G.M. Arafat Rahman"
 date: '2022-08-18'
-output: html_document
+output:rmarkdown::github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -543,7 +535,7 @@ plotmat(t(after_seven_days),pos = c(1,2),
 
 > Here we can see that there is only 17.5% chance of raining after 7 days from a clear day.
 
-##  Simulation of Multi Nomial Markov Chain on Weather Data:
+## Simulation of Multi Nomial Markov Chain on Weather Data:
 
 We will use transition matrix transition_matrix_weather to simulate.
 
@@ -706,7 +698,7 @@ Now replacing the closing_price column with encoded closing price array
 
 ```{r}
 df_batbc$closing_price <- closing_price_encoded
-df_batbc
+
 ```
 
 ## **Defining the transitions:**
@@ -992,7 +984,7 @@ plotmat(t(round(after_seven_days_stock,2)),pos = c(1,2),
         main = "Analysis of stock closing price trend after 7 days")
 ```
 
-##  Simulation of Multi Nomial Markov Chain on BATBC Stock Price:
+## Simulation of Multi Nomial Markov Chain on BATBC Stock Price:
 
 > We will use transition matrix `transition_matrix_stock` to simulate
 
