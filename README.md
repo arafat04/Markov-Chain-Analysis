@@ -1,6 +1,10 @@
 ---
-editor_options: 
-  markdown: 
+editor_options:
+  markdown:
+    wrap: 72
+    references: 
+      location: block
+    canonical: true
 ---
 
 Final Project - Markov Chain Analysis with R
