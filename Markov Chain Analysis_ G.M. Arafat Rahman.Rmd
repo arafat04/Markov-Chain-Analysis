@@ -2,7 +2,7 @@
 title: "Final Project - Markov Chain Analysis with R"
 author: "G.M. Arafat Rahman"
 date: '2022-08-18'
-output:rmarkdown::github_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -26,6 +26,7 @@ library(markovchain)
 library(diagram)
 library(expm)
 library(pracma)
+
 ```
 
 > Now loading the data-set.
