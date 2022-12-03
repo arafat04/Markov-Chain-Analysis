@@ -20,6 +20,7 @@ G.M. Arafat Rahman 2022-08-18
 
 ``` r
 library(dplyr)
+library(plotmat)
 ```
 
     ## Warning: package 'dplyr' was built under R version 4.2.1
