@@ -1,7 +1,7 @@
 ---
-editor_options: 
-  markdown: 
-    wrap: 72
+editor_options:
+  markdown:
+    mode: gfm
 ---
 
 # Final Project - Markov Chain Analysis with R
@@ -12,12 +12,7 @@ G.M. Arafat Rahman 2022-08-18
 
 > **Historical Daily Weather Data 2020**
 >
-> This dataset contains historical daily weather data for 163
-> countries(with provincial data for some) from Jan 1, 2020 up to April
-> 21, 2020. The countries and provinces were chosen based on the Johns
-> Hopkins COVID-19 dataset. It contains various features such as
-> temperature, pressure, humidity, ozone levels, visibility,
-> precipitation, etc. This dataset was collected from Kaggle.
+> This dataset contains historical daily weather data for 163 countries(with provincial data for some) from Jan 1, 2020 up to April 21, 2020. The countries and provinces were chosen based on the Johns Hopkins COVID-19 dataset. It contains various features such as temperature, pressure, humidity, ozone levels, visibility, precipitation, etc. This dataset was collected from Kaggle.
 
 ## Calling necessary libraries
 
@@ -202,8 +197,7 @@ df_Bangladesh = filter(df_weather,Country.Region=="Bangladesh")
 df_Bangladesh = select(df_Bangladesh, Country.Region, time, summary , icon)
 ```
 
-> We can see the unique weather condition in Bangladesh so that we can
-> build the states for markov chain.
+> We can see the unique weather condition in Bangladesh so that we can build the states for markov chain.
 
 ``` r
 unique(
@@ -215,12 +209,7 @@ unique(
 
 # 1. Defining the problem:
 
-> In the weather data-set of Bangladesh there are 112 observations. The
-> observations are daily based. We have found that there are 3 states
-> during this time period, they are: a day can be a "clear-day" or
-> "partly-cloudy-day" and there could be "rain" on that day. So we can
-> predict what will be weather forecast for next 7 days after a state
-> being chosen.
+> In the weather data-set of Bangladesh there are 112 observations. The observations are daily based. We have found that there are 3 states during this time period, they are: a day can be a "clear-day" or "partly-cloudy-day" and there could be "rain" on that day. So we can predict what will be weather forecast for next 7 days after a state being chosen.
 
 ### Finding the probability of the states from the data-set that we can build a transition matrix:
 
@@ -260,8 +249,7 @@ rainy_day
 
 ## Finding the probability:
 
-> We will choose the weather column in order to find the probability of
-> each states.
+> We will choose the weather column in order to find the probability of each states.
 
 ``` r
 weather_type = df_Bangladesh$icon
@@ -309,8 +297,7 @@ weather_type
 
 ## Defining the transitions:
 
-> As there are 3 states, there will be states \* states =3\*3 = 9
-> transition states and from each state there will be 3 states outgoing.
+> As there are 3 states, there will be states \* states =3\*3 = 9 transition states and from each state there will be 3 states outgoing.
 
 ### If the weather is in state "Rain"
 
@@ -338,10 +325,7 @@ partly_cloudy_clear = 0
 
 ### Counting the outgoing occurrences from each state:
 
-> This loop will find the count from each state to other states in order
-> to calculate the probability. We will run the loop till length-1 time
-> in order to avoid array index out of bound error and to make the count
-> accurate.
+> This loop will find the count from each state to other states in order to calculate the probability. We will run the loop till length-1 time in order to avoid array index out of bound error and to make the count accurate.
 
 ``` r
 len = length(weather_type)-1
@@ -450,9 +434,7 @@ partly_cloudy_clear
 
 ### Correcting the total count:
 
-> Earlier we have calculated how many observations are there for each
-> state. But from one state there can be no outgoing state to more than
-> one states. So we have to calculate to transition from each state.
+> Earlier we have calculated how many observations are there for each state. But from one state there can be no outgoing state to more than one states. So we have to calculate to transition from each state.
 
 ``` r
 rainy_transition = rain_to_rain + rain_to_clear + rain_to_partly_cloudy
@@ -578,11 +560,7 @@ p_partly_cloudy_to_partly_cloudy + p_partly_cloudy_clear + p_partly_cloudy_to_ra
 
 ### Building the transition matrix for markov chain model
 
-> Transition matrix is essential to make a markov chain model. I
-> calculated 1-step transition probabilities from each state manually.
-> Now I will create a matrix using those probabilities. In this matrix
-> byrow = True is enabled that will make the matrix created by row
-> values.
+> Transition matrix is essential to make a markov chain model. I calculated 1-step transition probabilities from each state manually. Now I will create a matrix using those probabilities. In this matrix byrow = True is enabled that will make the matrix created by row values.
 
 ``` r
 transition_matrix_weather <- round(matrix(c(p_clear_to_clear,p_clear_to_rain,p_clear_to_partly_cloudy,
@@ -607,8 +585,7 @@ transition_matrix_weather
 
 ### Making the Discrete Markov chain model:
 
-> Using a markovchain object, here I have built a discrete markov chain
-> model.
+> Using a markovchain object, here I have built a discrete markov chain model.
 
 ``` r
 discrete_transition_matrix_weather <- new("markovchain",transitionMatrix=transition_matrix_weather, 
@@ -663,11 +640,7 @@ plotmat(t(transition_matrix_weather),pos = c(2,1),
 
 ### Defining Current State
 
-> Let's take clear day as our current state , that is the probability
-> that the weather goes from Clear day to Rainy day in the next 7 days I
-> defined my state row matrix as this order
-> **`: "Clear Day","Rainy","Partly Cloudy Day"`**, so the vector for the
-> vector for choosing a clear Day is: **`(1,0,0)`**
+> Let's take clear day as our current state , that is the probability that the weather goes from Clear day to Rainy day in the next 7 days I defined my state row matrix as this order **`: "Clear Day","Rainy","Partly Cloudy Day"`**, so the vector for the vector for choosing a clear Day is: **`(1,0,0)`**
 
 ``` r
 initial_state <- matrix(c(1,0,0),nrow=1, byrow=TRUE)
@@ -713,8 +686,7 @@ plotmat(t(after_one_day),pos = c(2,1),
 
 ![](Markov-Chain-Analysis_-G.M.-Arafat-Rahman_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
 
-> Here we can see that there is only 5.7% chance of raining in the next
-> day of a clear day.
+> Here we can see that there is only 5.7% chance of raining in the next day of a clear day.
 
 ### Forecasting Rain after 2 days:
 
@@ -755,8 +727,7 @@ plotmat(t(after_two_days),pos = c(1,2),
 
 ![](Markov-Chain-Analysis_-G.M.-Arafat-Rahman_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
 
-> Here we can see that there is only 10.5% chance of raining after 2
-> days of a clear day.
+> Here we can see that there is only 10.5% chance of raining after 2 days of a clear day.
 
 ### Forecasting Rain after 3 days
 
@@ -797,8 +768,7 @@ plotmat(t(after_three_days),pos = c(1,2),
 
 ![](Markov-Chain-Analysis_-G.M.-Arafat-Rahman_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
 
-> Here we can see that there is only 13.7% chance of raining after 3
-> days of a clear day.
+> Here we can see that there is only 13.7% chance of raining after 3 days of a clear day.
 
 ### Forecasting Rain after 4 days
 
@@ -839,8 +809,7 @@ plotmat(t(after_four_days),pos = c(1,2),
 
 ![](Markov-Chain-Analysis_-G.M.-Arafat-Rahman_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
 
-> Here we can see that there is only 15.7% chance of raining after 4
-> days of a clear day.
+> Here we can see that there is only 15.7% chance of raining after 4 days of a clear day.
 
 ### Forecasting Rain after 5 days
 
@@ -882,8 +851,7 @@ plotmat(t(after_five_days),pos = c(1,2),
 
 ![](Markov-Chain-Analysis_-G.M.-Arafat-Rahman_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
 
-> Here we can see that there is only 16.7% chance of raining after 5
-> days from a clear day.
+> Here we can see that there is only 16.7% chance of raining after 5 days from a clear day.
 
 ### Forecasting Rain after 6 days
 
@@ -925,8 +893,7 @@ plotmat(t(after_six_days),pos = c(1,2),
 
 ![](Markov-Chain-Analysis_-G.M.-Arafat-Rahman_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
 
-> Here we can see that there is only 17.2% chance of raining after 6
-> days from a clear day.
+> Here we can see that there is only 17.2% chance of raining after 6 days from a clear day.
 
 ### Forecasting Rain after 7 days
 
@@ -966,8 +933,7 @@ plotmat(t(after_seven_days),pos = c(1,2),
 
 ![](Markov-Chain-Analysis_-G.M.-Arafat-Rahman_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
 
-> Here we can see that there is only 17.5% chance of raining after 7
-> days from a clear day.
+> Here we can see that there is only 17.5% chance of raining after 7 days from a clear day.
 
 ## Simulation of Multi Nomial Markov Chain on Weather Data:
 
@@ -2037,41 +2003,23 @@ unique(
 
 # 1. Abstract
 
-Stock Market of Bangladesh is very much inconsistent in terms of closing
-rates and returning rates. This paper aims to analyze the stock price
-trend of British American Tobacco Bangladesh Company(BATBC). We will use
-Markov Chain model to analyze this trend.
+Stock Market of Bangladesh is very much inconsistent in terms of closing rates and returning rates. This paper aims to analyze the stock price trend of British American Tobacco Bangladesh Company(BATBC). We will use Markov Chain model to analyze this trend.
 
 # 2. Data Collection:
 
-This stock data set covers the period from January 2021 to December 2021
-on the Dhaka Stock Exchange. Then, we limited our observations to those
-made where BATBC is the Company and made a separate data-set containing
-only the observations of BATBC.
+This stock data set covers the period from January 2021 to December 2021 on the Dhaka Stock Exchange. Then, we limited our observations to those made where BATBC is the Company and made a separate data-set containing only the observations of BATBC.
 
 # 3. Results:
 
-The BATBC data set has 240 observations. The stock's daily closing price
-will be taken into account. Among these 240 observations, 221 stock
-closing prices are distinct. We will investigate three different
-scenarios in order to examine the trend: if the stock closing price is
-higher or lower the day after a specific stock closing price, or if it
-stays the same.
+The BATBC data set has 240 observations. The stock's daily closing price will be taken into account. Among these 240 observations, 221 stock closing prices are distinct. We will investigate three different scenarios in order to examine the trend: if the stock closing price is higher or lower the day after a specific stock closing price, or if it stays the same.
 
 ## 3.1 Determining the states:
 
-There will be three states in total in the transition matrix. If the
-stock closing price is higher than a specific day, we will denote
-higher, if it is lower then lower, otherwise if it remains same then
-constant.
+There will be three states in total in the transition matrix. If the stock closing price is higher than a specific day, we will denote higher, if it is lower then lower, otherwise if it remains same then constant.
 
 ## 3.2 Finding the transitional probability:
 
-We encoded the closing_price column into those three states. We took
-first observation as constant_closing_price and then if a stock closing
-price was higher than current one, then we encoded as
-higher_closing_price, and if it decreased, then it was encoded as
-lower_closing_price.
+We encoded the closing_price column into those three states. We took first observation as constant_closing_price and then if a stock closing price was higher than current one, then we encoded as higher_closing_price, and if it decreased, then it was encoded as lower_closing_price.
 
 ``` r
 print("hello world")
@@ -2175,8 +2123,7 @@ df_batbc$closing_price <- closing_price_encoded
 
 ## **Defining the transitions:**
 
-> As there are 3 states, there will be states \* states =3\*3 = 9
-> transition states and from each state there will be 3 states outgoing.
+> As there are 3 states, there will be states \* states =3\*3 = 9 transition states and from each state there will be 3 states outgoing.
 
 **If the stock closing price is in state "Constant":**
 
@@ -2204,10 +2151,7 @@ higher_to_lower = 0
 
 ### **Counting the outgoing occurrences from each state:**
 
-> This loop will find the count from each state to other states in order
-> to calculate the probability. We will run the loop till length-1 time
-> in order to avoid array index out of bound error and to make the count
-> accurate.
+> This loop will find the count from each state to other states in order to calculate the probability. We will run the loop till length-1 time in order to avoid array index out of bound error and to make the count accurate.
 
 ``` r
 closing_price = df_batbc$closing_price
@@ -2308,9 +2252,7 @@ higher_to_lower
 
 ### **Correcting the total count:**
 
-> Earlier we have calculated how many observations are there for each
-> state. But from one state there can be no outgoing state to more than
-> one states. So we have to calculate to transition from each state.
+> Earlier we have calculated how many observations are there for each state. But from one state there can be no outgoing state to more than one states. So we have to calculate to transition from each state.
 
 ``` r
 constant_transition = constant_to_constant + constant_to_higher + constant_to_lower
@@ -2420,11 +2362,7 @@ p_higher_to_lower
 
 ### **Building the transition matrix for markov chain model**
 
-> Transition matrix is essential to make a markov chain model. I
-> calculated 1-step transition probabilities from each state manually.
-> Now I will create a matrix using those probabilities. In this matrix
-> byrow = True is enabled that will make the matrix created by row
-> values.
+> Transition matrix is essential to make a markov chain model. I calculated 1-step transition probabilities from each state manually. Now I will create a matrix using those probabilities. In this matrix byrow = True is enabled that will make the matrix created by row values.
 
 ``` r
 transition_matrix_stock <- matrix(c(p_higher_to_higher, p_higher_to_lower,p_higher_to_constant, p_lower_to_higher , p_lower_to_lower,p_lower_to_constant , p_constant_to_higher , p_constant_to_lower,p_constant_to_constant),nrow = 3, byrow = TRUE)
@@ -2446,8 +2384,7 @@ round(transition_matrix_stock,3)
 
 ### **Making the Discrete Markov chain model:**
 
-> Using a Markov chain object, here I have built a discrete markov chain
-> model.
+> Using a Markov chain object, here I have built a discrete markov chain model.
 
 ``` r
 discrete_transition_matrix_stock <- new("markovchain",transitionMatrix=transition_matrix_stock, 
@@ -2487,9 +2424,7 @@ plotmat(t(round(transition_matrix_stock,2)),pos = c(2,1),
 
 ## The code chunk below is built in Markov chain transition matrix and model builder:
 
-I have added this code to cross check my own calculated transition
-matrix with the built in library's result. Here we can see the results
-are same.
+I have added this code to cross check my own calculated transition matrix with the built in library's result. Here we can see the results are same.
 
 ``` r
 sequence <- closing_price
@@ -2541,11 +2476,7 @@ initial_state <- matrix(c(1,0,0),nrow=1, byrow=TRUE)
 
 ### **Defining Current State**
 
-> Let's take clear day as our current state , that is the probability
-> that the stock closing price goes from Lower to High after the next 7
-> days. I defined my state row matrix as this order
-> **`: "Higher","Lower","Constant",`**, so the vector for the vector for
-> choosing a clear Day is: **`(0,1,0)`**
+> Let's take clear day as our current state , that is the probability that the stock closing price goes from Lower to High after the next 7 days. I defined my state row matrix as this order **`: "Higher","Lower","Constant",`**, so the vector for the vector for choosing a clear Day is: **`(0,1,0)`**
 
 ``` r
 initial_state_stock <- matrix(c(0,1,0),nrow=1, byrow=TRUE)
